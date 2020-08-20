@@ -7,7 +7,7 @@ function Square(props) {
     <button className="square" onClick={props.onClick}>
       {props.value}
     </button>
-  );
+  )
 }
 
 class Board extends React.Component {
@@ -15,19 +15,22 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
-      xIsNext: true,
+      isNext: true
     };
   }
 
   handleClick(i) {
     const squares = this.state.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares || squares[i])) {
       return;
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    if (squares[i] != null) {
+      return;
+    }
+    squares[i] = this.state.isNext ? 'X' : 'O';
     this.setState({
       squares: squares,
-      xIsNext: !this.state.xIsNext,
+      isNext: !this.state.isNext
     });
   }
 
@@ -41,32 +44,33 @@ class Board extends React.Component {
   }
 
   render() {
-    const winner = calculateWinner(this.state.squares);
-    let status;
+    const winner = calculateWinner(this.state.squares)
+    let status, sel;
     if (winner) {
-      status = 'Winner: ' + winner;
+      if (winner === 'I') {
+        status = 'Game Draw'
+        sel = null
+      } else {
+        status = 'Winner: '
+        sel = winner
+      }
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      status = 'Next player: ';
+      sel = (this.state.isNext ? 'X' : 'O')
     }
 
     return (
       <div>
         <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+          {this.renderSquare(0)}{this.renderSquare(1)}{this.renderSquare(2)}
         </div>
         <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
+          {this.renderSquare(3)}{this.renderSquare(4)}{this.renderSquare(5)}
         </div>
         <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
+          {this.renderSquare(6)}{this.renderSquare(7)}{this.renderSquare(8)}
         </div>
-        <div className="status">{status}</div>
+        <div className="status">{status} <span>{sel}</span></div>
       </div>
     );
   }
@@ -100,11 +104,19 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6],
   ];
+
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
+
+  let nFlag = false;
+  for (let i = 0; i < squares.length; i++) {
+    if (squares[i] == null) nFlag = true;
+  }
+  if (!nFlag) return 'I';
+
   return null;
 }
