@@ -61,6 +61,25 @@ ol, ul {
     outline: none;
 }
 
+.restart {
+    font-size: 50%;
+    font-family: inherit;
+    display: block;
+    margin: 0 auto;
+    background: #10151b;
+    color: #ffffff;
+    box-shadow: -10px -10px 19px #06080b, 
+             10px 10px 19px #1a222b;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+}
+
+.restart:active {
+    box-shadow: inset 10px 10px 20px #0b0e12, 
+            inset -10px -10px 20px #151c24;
+}
+
 .kbd-navigation .square:focus {
     background: #ddd;
 }
